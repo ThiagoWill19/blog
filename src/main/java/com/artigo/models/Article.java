@@ -1,14 +1,16 @@
 package com.artigo.models;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,19 +21,24 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Article {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 	
-	private String name;
+	private String title;
 	
-	private String email;
+	@Lob
+	private String content;
 	
-	private String password;
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private LocalDate creationDate;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Article> articles;
+	@ManyToOne
+	private User autor;
+	
+	private boolean active;
 	
 }
+
