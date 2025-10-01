@@ -1,4 +1,4 @@
-package repositories;
+package com.artigo.repositories;
 
 import java.util.UUID;
 
