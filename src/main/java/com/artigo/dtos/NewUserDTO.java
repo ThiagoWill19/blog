@@ -1,4 +1,4 @@
-package dtos.user;
+package com.artigo.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
