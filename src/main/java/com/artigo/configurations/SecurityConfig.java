@@ -25,9 +25,9 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/login", "/artigos", "/create-acount").permitAll()
+					.requestMatchers("/account/*").permitAll()
 					.anyRequest().authenticated()).formLogin( form -> form
-							.loginPage("/user/login")
+							.loginPage("/account/login")
 							.loginProcessingUrl("/login")
 							.defaultSuccessUrl("/creatorArea",true)
 							.permitAll());
