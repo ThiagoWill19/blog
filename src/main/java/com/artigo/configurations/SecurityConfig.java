@@ -27,7 +27,7 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/login", "/artigos", "/create-acount").permitAll()
 					.anyRequest().authenticated()).formLogin( form -> form
-							.loginPage("/loginPage")
+							.loginPage("/user/login")
 							.loginProcessingUrl("/login")
 							.defaultSuccessUrl("/creatorArea",true)
 							.permitAll());
