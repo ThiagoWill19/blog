@@ -40,6 +40,7 @@ public class AccountController {
 			return "/newAccountPage";
 		}
 		
+		
 		try {
 			userService.createNewUser(newUser);
 		} catch (Exception e) {
@@ -47,6 +48,6 @@ public class AccountController {
 			return "/newAccountPage";
 		}
 
-		return "redirect:/login";
+		return "redirect:/account/login";
 	}
 }

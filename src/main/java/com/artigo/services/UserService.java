@@ -17,7 +17,7 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder encoder;
 	
-	public void createNewUser(NewUserDTO newUserDTO) {
+	public void createNewUser(NewUserDTO newUserDTO) throws Exception{
 		
 		if(!userRepository.existsByEmail(newUserDTO.getEmail())) {
 			User user = new User();
@@ -27,9 +27,9 @@ public class UserService {
 			user.setPassword(password);
 			
 			userRepository.save(user);
+		}else {
+			throw new Exception("Email já cadastrado no sistema!");
 		}
-		
-		
-		
+			
 	}
 }
