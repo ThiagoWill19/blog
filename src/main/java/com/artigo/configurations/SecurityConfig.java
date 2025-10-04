@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +31,13 @@ public class SecurityConfig {
 							.loginPage("/account/login")
 							.loginProcessingUrl("/login")
 							.defaultSuccessUrl("/creatorArea",true)
-							.permitAll());
+							.permitAll()).logout(logout -> logout
+						            .logoutUrl("/logout")              // URL que irá disparar o logout
+						            .logoutSuccessUrl("/account/login") // para onde redirecionar após logout
+						            .invalidateHttpSession(true)       // invalida a sessão
+						            .deleteCookies("JSESSIONID")       // remove cookies de sessão
+						        );
+			
 		
 		return http.build();
 	}

@@ -31,7 +31,7 @@ public class AccountController {
 	public String createAccount(Model model) {
 		model.addAttribute("newUser", new NewUserDTO());
 		return "/newAccountPage";
-	}
+	} 
 	
 	@PostMapping
 	public String createNewUser(Model model, @Valid @ModelAttribute("newUser") NewUserDTO newUser, BindingResult result) {
