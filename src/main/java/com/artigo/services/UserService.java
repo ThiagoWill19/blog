@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.artigo.dtos.NewUserDTO;
+import com.artigo.exceptions.CreateAccountException;
 import com.artigo.models.User;
 import com.artigo.repositories.UserRepository;
 
@@ -28,7 +29,7 @@ public class UserService {
 			
 			userRepository.save(user);
 		}else {
-			throw new Exception("Email já cadastrado no sistema!");
+			throw new CreateAccountException("Email já cadastrado no sistema!");
 		}
 			
 	}
