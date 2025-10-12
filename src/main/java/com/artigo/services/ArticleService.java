@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.artigo.dtos.NewArticleDto;
@@ -32,5 +35,16 @@ public class ArticleService {
 		
 		articleRepository.save(article);
 	}
+	
+	
+   public Page<Article> getArticles(int page, int size){
+	   
+	   Pageable pageable = PageRequest.of(page, size);
+	   
+	   return articleRepository.findAll(pageable);
+   }
+   
+   
 
 }
+
