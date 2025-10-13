@@ -40,8 +40,13 @@ public class ArticleService {
    public Page<Article> getArticles(int page, int size){
 	   
 	   Pageable pageable = PageRequest.of(page, size);
-	   
 	   return articleRepository.findAll(pageable);
+   }
+   
+   public Page<Article> getAllByUser(int page, int size, User user){
+	   
+	   Pageable pageable = PageRequest.of(page, size);
+	   return articleRepository.findAllByAutor(pageable, user);
    }
    
    
