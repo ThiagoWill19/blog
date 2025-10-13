@@ -1,6 +1,5 @@
 package com.artigo.repositories;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -12,6 +11,6 @@ import com.artigo.models.User;
 
 public interface ArticleRepository extends JpaRepository<Article, UUID>{
 
-		Page<Article> findAllByAutor(Pageable pageable, User user);
+		Page<Article> findAllByAutorOrderByCreationDateDesc(Pageable pageable, User user);
 		
 }

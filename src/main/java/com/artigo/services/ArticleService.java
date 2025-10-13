@@ -46,7 +46,7 @@ public class ArticleService {
    public Page<Article> getAllByUser(int page, int size, User user){
 	   
 	   Pageable pageable = PageRequest.of(page, size);
-	   return articleRepository.findAllByAutor(pageable, user);
+	   return articleRepository.findAllByAutorOrderByCreationDateDesc(pageable, user);
    }
    
    
