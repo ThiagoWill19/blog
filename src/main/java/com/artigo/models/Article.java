@@ -1,6 +1,6 @@
 package com.artigo.models;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,8 +32,8 @@ public class Article {
 	@Lob
 	private String content;
 	
-	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	private LocalDate creationDate;
+	@DateTimeFormat(pattern = "dd-MM-yyyy hh:mm")
+	private LocalDateTime creationDate;
 	
 	@ManyToOne
 	private User autor;

@@ -1,18 +1,24 @@
 package com.artigo.controllers;
 
+import java.nio.file.AccessDeniedException;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.artigo.configurations.UserDetailsImpl;
+import com.artigo.dtos.ArticleDto;
 import com.artigo.dtos.NewArticleDto;
-import com.artigo.models.Article;
+import com.artigo.exceptions.ArticleNotFoundException;
 import com.artigo.services.ArticleService;
 
 @Controller
@@ -28,7 +34,7 @@ public class UserController {
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size) {
 		
-		Page<Article> articlePage =  articleService.getAllByUser(page, size, userDetails.getUser());
+		Page<ArticleDto> articlePage =  articleService.getAllByUser(page, size, userDetails.getUser());
 		
 		model.addAttribute("userName",userDetails.getUser().getName());
 		model.addAttribute("articles", articlePage);
@@ -54,5 +60,40 @@ public class UserController {
 		return "redirect:/creatorArea";
 		
 	}
+	
+	@GetMapping("/articles/{id}")
+	public String findArticleById(Model model,
+			RedirectAttributes redirectAttributes,
+			@PathVariable UUID id,
+			@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		
+		try {
+			
+			model.addAttribute("article", articleService.findById(id, userDetails.getUser()));
+			return "/articlePage";
+			
+		} catch (Exception e) {
+			
+			redirectAttributes.addFlashAttribute("message", e.getMessage());
+		}
+		
+		return "redirect:/creatorArea";
+		
+	}
+	
+	@GetMapping("/article/delete/{id}")
+	public String deleteArticle(Model model,
+			RedirectAttributes redirectAttributes,
+			@PathVariable UUID id,
+			@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		
+		try {
+			articleService.deleteById(id, userDetails.getUser());
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("message", e.getMessage());
+		}
+		return "redirect:/creatorArea";
+	}
+	
 	
 }
