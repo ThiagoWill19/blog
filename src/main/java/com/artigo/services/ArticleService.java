@@ -39,6 +39,7 @@ public class ArticleService {
 
 		articleRepository.save(article);
 	}
+	
 
 	public Page<ArticleDto> getArticles(int page, int size) {
 
@@ -47,6 +48,7 @@ public class ArticleService {
 		Page<Article> pag = articleRepository.findAll(pageable);
 		return pag.map(p -> new ArticleDto(p));
 	}
+	
 
 	public Page<ArticleDto> getAllByUser(int page, int size, User user) {
 
@@ -54,6 +56,7 @@ public class ArticleService {
 		Page<Article> pag = articleRepository.findAllByAutorOrderByCreationDateDesc(pageable, user);
 		return pag.map(p -> new ArticleDto(p));
 	}
+	
 
 	public ArticleDto findById(UUID id, User user) throws Exception {
 
@@ -73,6 +76,7 @@ public class ArticleService {
 		}
 
 	}
+	
 
 	public void deleteById(UUID id, User user) throws Exception {
 
@@ -88,6 +92,7 @@ public class ArticleService {
 			throw new AccessDeniedException("Você não tem permissão para excluir este artigo!");
 		}
 	}
+	
 
 	public Page<ArticleDto> findByTitle(String title, User user, int page, int size) {
 
@@ -102,6 +107,7 @@ public class ArticleService {
 
 		return pag.map(p -> new ArticleDto(p));
 	}
+	
 	
 	public void editArticle(ArticleDto articleDto, User user) throws Exception {
 		

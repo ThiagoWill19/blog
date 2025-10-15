@@ -40,14 +40,14 @@ public class UserController {
 		model.addAttribute("currentPage", articlePage.getNumber());
         model.addAttribute("totalPages", articlePage.getTotalPages());
         model.addAttribute("title", title);
-		return "/creatorAreaPage";
+		return "/user/creatorAreaPage";
 	}
 	
 	@GetMapping("/newArticle")
 	public String newArticlePage(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		model.addAttribute("userName",userDetails.getUser().getName());
         model.addAttribute("newArticleDto", new NewArticleDto());
-		return "/newArticlePage";
+		return "/article/newArticlePage";
 	}
 	
 	@PostMapping("/newArticle")
@@ -70,7 +70,7 @@ public class UserController {
 		try {
 			
 			model.addAttribute("article", articleService.findById(id, userDetails.getUser()));
-			return "/articlePage";
+			return "/article/articlePage";
 			
 		} catch (Exception e) {
 			
@@ -104,7 +104,7 @@ public class UserController {
 		try {
 			model.addAttribute("userName",userDetails.getUser().getName());
 			model.addAttribute("articleDto", articleService.findById(id, userDetails.getUser()));
-			return "/editArticlePage2";
+			return "/article/editArticlePage2";
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("message", e.getMessage());
 		}
