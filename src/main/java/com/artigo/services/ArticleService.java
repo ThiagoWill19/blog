@@ -85,7 +85,7 @@ public class ArticleService {
 		if (article.getAutor().getEmail().equals(user.getEmail())) {
 			articleRepository.deleteById(id);
 		} else {
-			throw new AccessDeniedException("Você não tem permissão para excluir este artigo");
+			throw new AccessDeniedException("Você não tem permissão para excluir este artigo!");
 		}
 	}
 
@@ -101,5 +101,25 @@ public class ArticleService {
 		}
 
 		return pag.map(p -> new ArticleDto(p));
+	}
+	
+	public void editArticle(ArticleDto articleDto, User user) throws Exception {
+		
+		if (!articleRepository.existsById(articleDto.getId())) {
+			throw new ArticleNotFoundException("Artigo não encontrado com o ID informado");
+		}
+		
+		Article article = articleRepository.findById(articleDto.getId()).get();
+		
+		if (article.getAutor().getEmail().equals(user.getEmail())) {
+			
+			article.setTitle(Jsoup.clean(articleDto.getTitle(), Safelist.none()));
+			article.setContent(Jsoup.clean(articleDto.getContent(), Safelist.relaxed()));
+			articleRepository.save(article);
+			
+		} else {
+			throw new AccessDeniedException("Você não tem permissão para editar este artigo!");
+		}
+		
 	}
 }

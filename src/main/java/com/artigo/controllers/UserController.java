@@ -61,7 +61,7 @@ public class UserController {
 		
 	}
 	
-	@GetMapping("/articles/{id}")
+	@GetMapping("/article/{id}")
 	public String findArticleById(Model model,
 			RedirectAttributes redirectAttributes,
 			@PathVariable UUID id,
@@ -95,5 +95,38 @@ public class UserController {
 		return "redirect:/creatorArea";
 	}
 	
+	@GetMapping("/article/edit/{id}")
+	public String editArticlePage(Model model,
+			@PathVariable UUID id,
+			RedirectAttributes redirectAttributes,
+			@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		
+		try {
+			model.addAttribute("userName",userDetails.getUser().getName());
+			model.addAttribute("articleDto", articleService.findById(id, userDetails.getUser()));
+			return "/editArticlePage2";
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("message", e.getMessage());
+		}
+		
+		return "redirect:/creatorArea";
+	}
+	
+	@PostMapping("/article/edit")
+	public String editArticle(Model model,
+			ArticleDto articleDto,
+			RedirectAttributes redirectAttributes,
+			@AuthenticationPrincipal UserDetailsImpl userDetails ) {
+		
+		try {
+			articleService.editArticle(articleDto, userDetails.getUser());
+			return "redirect:/creatorArea/article/" + articleDto.getId();
+			
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("message", e.getMessage());
+		}
+		
+		return "redirect:/creatorArea";
+	}
 	
 }

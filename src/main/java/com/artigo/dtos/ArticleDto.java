@@ -24,5 +24,9 @@ public class ArticleDto {
 		this.autor = article.getAutor().getName();
 	}
 	
+	public ArticleDto() {
+		
+	}
+	
 	
 }
