@@ -13,4 +13,6 @@ public interface ArticleRepository extends JpaRepository<Article, UUID>{
 
 		Page<Article> findAllByAutorOrderByCreationDateDesc(Pageable pageable, User user);
 		
+		Page<Article> findAllByAutor_nameAndTitleContainingIgnoreCaseOrderByCreationDateDesc(String autorName, String title, Pageable pageable);
+		
 }

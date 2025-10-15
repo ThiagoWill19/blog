@@ -1,6 +1,5 @@
 package com.artigo.controllers;
 
-import java.nio.file.AccessDeniedException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.artigo.configurations.UserDetailsImpl;
 import com.artigo.dtos.ArticleDto;
 import com.artigo.dtos.NewArticleDto;
-import com.artigo.exceptions.ArticleNotFoundException;
 import com.artigo.services.ArticleService;
 
 @Controller
@@ -32,14 +30,16 @@ public class UserController {
 	public String creatorArea(Model model, 
 			@AuthenticationPrincipal UserDetailsImpl userDetails,
 			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int size) {
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "ALL") String title) {
 		
-		Page<ArticleDto> articlePage =  articleService.getAllByUser(page, size, userDetails.getUser());
+		Page<ArticleDto> articlePage =  articleService.findByTitle(title, userDetails.getUser(), page, size);
 		
 		model.addAttribute("userName",userDetails.getUser().getName());
 		model.addAttribute("articles", articlePage);
 		model.addAttribute("currentPage", articlePage.getNumber());
         model.addAttribute("totalPages", articlePage.getTotalPages());
+        model.addAttribute("title", title);
 		return "/creatorAreaPage";
 	}
 	

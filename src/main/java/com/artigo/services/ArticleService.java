@@ -21,78 +21,85 @@ import com.artigo.repositories.ArticleRepository;
 
 @Service
 public class ArticleService {
-	
+
 	@Autowired
 	ArticleRepository articleRepository;
-	
+
 	public void newArticle(NewArticleDto newArticleDto, User user) {
-		
+
 		Article article = new Article();
-		
-		//Sanitizar conteúdo HTML
+
+		// Sanitizar conteúdo HTML
 		article.setTitle(Jsoup.clean(newArticleDto.getTitle(), Safelist.none()));
 		article.setContent(Jsoup.clean(newArticleDto.getContent(), Safelist.relaxed()));
-		
+
 		article.setCreationDate(LocalDateTime.now());
-		
+
 		article.setAutor(user);
-		
+
 		articleRepository.save(article);
 	}
-	
-	
-   public Page<ArticleDto> getArticles(int page, int size){
-	   
-	   Pageable pageable = PageRequest.of(page, size);
-	   
-	   Page<Article> pag = articleRepository.findAll(pageable);
-	   return pag.map( p -> new ArticleDto(p));
-   }
-   
-   
-   public Page<ArticleDto> getAllByUser(int page, int size, User user){
-	   
-	   Pageable pageable = PageRequest.of(page, size);
-	   Page<Article> pag = articleRepository.findAllByAutorOrderByCreationDateDesc(pageable, user);
-	   return pag.map(p -> new ArticleDto(p));
-   }
-   
-   
-   public ArticleDto findById(UUID id, User user) throws Exception{
-	   
-	   
-	   if(!articleRepository.existsById(id)) {
-		   throw new ArticleNotFoundException("Artigo não encontrado com o ID informado");
-	   }
-	   
-	   Article article = articleRepository.findById(id).get();
-	   
-	   if(article.getAutor().getEmail().equals(user.getEmail())) {
-		   
-		   ArticleDto articleDto = new ArticleDto(article);
-		   return articleDto;
-		   
-	   }else {
-		   throw new AccessDeniedException("Você não tem permissão para acessar este artigo!");
-	   }
-	   
-   }
-   
-   
-   
-   public void deleteById(UUID id, User user) throws Exception {
-	   
-	   if(!articleRepository.existsById(id)) {
-		   throw new ArticleNotFoundException("Artigo não encontrado com o ID informado");
-	   }
-	   
-	   Article article = articleRepository.findById(id).get();
-	   
-	   if(article.getAutor().getEmail().equals(user.getEmail())) {
-		   articleRepository.deleteById(id);
-	   }else {
-		   throw new AccessDeniedException("Você não tem permissão para excluir este artigo");
-	   }
-   }
-}
 
+	public Page<ArticleDto> getArticles(int page, int size) {
+
+		Pageable pageable = PageRequest.of(page, size);
+
+		Page<Article> pag = articleRepository.findAll(pageable);
+		return pag.map(p -> new ArticleDto(p));
+	}
+
+	public Page<ArticleDto> getAllByUser(int page, int size, User user) {
+
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Article> pag = articleRepository.findAllByAutorOrderByCreationDateDesc(pageable, user);
+		return pag.map(p -> new ArticleDto(p));
+	}
+
+	public ArticleDto findById(UUID id, User user) throws Exception {
+
+		if (!articleRepository.existsById(id)) {
+			throw new ArticleNotFoundException("Artigo não encontrado com o ID informado");
+		}
+
+		Article article = articleRepository.findById(id).get();
+
+		if (article.getAutor().getEmail().equals(user.getEmail())) {
+
+			ArticleDto articleDto = new ArticleDto(article);
+			return articleDto;
+
+		} else {
+			throw new AccessDeniedException("Você não tem permissão para acessar este artigo!");
+		}
+
+	}
+
+	public void deleteById(UUID id, User user) throws Exception {
+
+		if (!articleRepository.existsById(id)) {
+			throw new ArticleNotFoundException("Artigo não encontrado com o ID informado");
+		}
+
+		Article article = articleRepository.findById(id).get();
+
+		if (article.getAutor().getEmail().equals(user.getEmail())) {
+			articleRepository.deleteById(id);
+		} else {
+			throw new AccessDeniedException("Você não tem permissão para excluir este artigo");
+		}
+	}
+
+	public Page<ArticleDto> findByTitle(String title, User user, int page, int size) {
+
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Article> pag;
+		
+		if (title.equals("ALL")) {
+			pag = articleRepository.findAllByAutorOrderByCreationDateDesc(pageable, user);
+		} else {
+			pag = articleRepository.findAllByAutor_nameAndTitleContainingIgnoreCaseOrderByCreationDateDesc(user.getName(), title, pageable);
+		}
+
+		return pag.map(p -> new ArticleDto(p));
+	}
+}
